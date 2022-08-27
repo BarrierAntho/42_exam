@@ -6,7 +6,7 @@
 #    By: abarrier <abarrier@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/27 11:05:38 by abarrier          #+#    #+#              #
-#    Updated: 2022/08/27 11:05:39 by abarrier         ###   ########.fr        #
+#    Updated: 2022/08/27 11:15:37 by abarrier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ CFLAGS		:=	-MMD -Wall -Werror -Wextra
 CFLAGSADD	:=	-g3
 NAME		:=	microshell
 RM		:=	rm -rf
+VAL		:=	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes
 
 INCLUDE		:=	micro.h
 
@@ -75,6 +76,17 @@ test		:
 			./$(NAME) "pouet" "|" "/bin/ls"
 			@echo $(SEP)
 			./$(NAME) "/bin/ls" "|" "pouet"
+
+vtest		:
+			make
+			@echo $(SEP)
+			$(VAL) ./$(NAME) "/bin/echo" "Hello" "|" "/bin/wc"
+			@echo $(SEP)
+			$(VAL) ./$(NAME) "pouet" "|" "/bin/ls"
+			@echo $(SEP)
+			$(VAL) ./$(NAME) "/bin/ls" "|" "pouet"
+			@echo $(SEP)
+			$(VAL) ./$(NAME) "/bin/ls" "|" "pouet" ";" "cd" ";" "/bin/ls" "|" "/bin/wc"
 
 -include $(DEPS)
 

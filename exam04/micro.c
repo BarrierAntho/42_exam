@@ -6,7 +6,7 @@
 /*   By: abarrier <abarrier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 11:05:43 by abarrier          #+#    #+#             */
-/*   Updated: 2022/08/27 11:05:45 by abarrier         ###   ########.fr       */
+/*   Updated: 2022/08/27 11:13:07 by abarrier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ int	micro_exec(char **argv, char **envp, size_t len_cmd,
 			if (tok_next == PIPE)
 				dup2(pfd[WRITE], STDOUT_FILENO);
 			execve(fullcmd[0], fullcmd, envp);
+			if (tok_prev == PIPE)
+				close(*save_fd);
+			if (tok_next == PIPE)
+			{
+				close(pfd[READ]);
+				close(pfd[WRITE]);
+			}
 			ft_putstr_fd(2, ERR_CMD);
 			ft_putstr_endl_fd(2, fullcmd[0]);
 			free(fullcmd);
